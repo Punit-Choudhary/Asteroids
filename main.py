@@ -68,7 +68,7 @@ class Player(object):
         self.cosine = math.cos(math.radians(self.angle + 90))
         self.sine = math.sin(math.radians(self.angle + 90))
         self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
-        
+
 
 def redrawGameWindow():
     win.blit(bg, (0,0))
@@ -81,7 +81,13 @@ run = True
 while run:
     clock.tick(60)
     if not gameover:
-        pass
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player.turnLeft()
+        if keys[pygame.K_RIGHT]:
+            player.turnRight()
+        if keys[pygame.K_UP]:
+            player.moveForward()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
