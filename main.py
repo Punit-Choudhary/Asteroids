@@ -1,4 +1,5 @@
 import pygame
+import math
 
 s_width = 800
 s_height = 800
@@ -26,8 +27,47 @@ class Player(object):
         self.x = s_width // 2
         self.y = s_height // 2
 
+        self.angle = 0
+        self.rotatedSurf = pygame.transform.rotate(self.img, self.angle)
+        self.rotatedRect = self.rotatedSurf.get_rect()
+        self.rotatedRect.center = (self.x, self.y)
+        self.cosine = math.cos(math.radians(self.angle + 90))
+        self.sine = math.sin(math.radians(self.angle + 90))
+        self.head = (self.x + self.cosine * self.width // 2, self.y - self.sine * self.height // 2)
+
+
+
     def draw(self, win):
-        win.blit(self.img, [self.x, self.y, self.width, self.height])
+        #win.blit(self.img, [self.x, self.y, self.width, self.height])
+        win.blit(self.rotatedSurf, self.rotatedRect)
+
+    def turnLeft(self):
+        self.angle += 5
+        self.rotatedSurf = pygame.transform.rotate(self.img, self.angle)
+        self.rotatedRect = self.rotatedSurf.get_rect()
+        self.rotatedRect.center = (self.x, self.y)
+        self.cosine = math.cos(math.radians(self.angle + 90))
+        self.sine = math.sin(math.radians(self.angle + 90))
+        self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
+
+    def turnRight(self):
+        self.angle -= 5
+        self.rotatedSurf = pygame.transform.rotate(self.img, self.angle)
+        self.rotatedRect = self.rotatedSurf.get_rect()
+        self.rotatedRect.center = (self.x, self.y)
+        self.cosine = math.cos(math.radians(self.angle + 90))
+        self.sine = math.sin(math.radians(self.angle + 90))
+        self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
+    
+    def moveForward(self):
+        self.x += self.cosine * 6
+        self.y -= self.sine * 6
+        self.rotatedSurf = pygame.transform.rotate(self.img, self.angle)
+        self.rotatedRect = self.rotatedSurf.get_rect()
+        self.rotatedRect.center = (self.x, self.y)
+        self.cosine = math.cos(math.radians(self.angle + 90))
+        self.sine = math.sin(math.radians(self.angle + 90))
+        self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
         
 
 def redrawGameWindow():
