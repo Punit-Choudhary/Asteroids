@@ -86,6 +86,10 @@ class Bullet(object):
 
     def draw(self, win):
         pygame.draw.rect(win, (255, 255, 255), [self.x, self.y, self.w, self.h])
+    
+    def checkOffScreen(self):
+        if self.x < -50 or self.x > s_width or self.y > s_height or self.y < -50:
+            return True
 
 
 def redrawGameWindow():
@@ -106,6 +110,9 @@ while run:
     if not gameover:
         for b in playerBullets:
             b.move()
+            
+            if b.checkOffScreen():
+                playerBullets.pop(playerBullets.index(b))
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
