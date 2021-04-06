@@ -48,7 +48,7 @@ class Player(object):
         self.rotatedRect.center = (self.x, self.y)
         self.cosine = math.cos(math.radians(self.angle + 90))
         self.sine = math.sin(math.radians(self.angle + 90))
-        self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
+        self.head = (self.x + self.cosine * self.width // 2, self.y - self.sine * self.height // 2)
 
     def turnRight(self):
         self.angle -= 5
@@ -57,7 +57,7 @@ class Player(object):
         self.rotatedRect.center = (self.x, self.y)
         self.cosine = math.cos(math.radians(self.angle + 90))
         self.sine = math.sin(math.radians(self.angle + 90))
-        self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
+        self.head = (self.x + self.cosine * self.width // 2, self.y - self.sine * self.height // 2)
     
     def moveForward(self):
         self.x += self.cosine * 6
@@ -67,7 +67,7 @@ class Player(object):
         self.rotatedRect.center = (self.x, self.y)
         self.cosine = math.cos(math.radians(self.angle + 90))
         self.sine = math.sin(math.radians(self.angle + 90))
-        self.head = (self.x + self.cosine + self.width // 2, self.y - self.sine * self.height // 2)
+        self.head = (self.x + self.cosine * self.width // 2, self.y - self.sine * self.height // 2)
 
 class Bullet(object):
     def __init__(self):
@@ -82,7 +82,7 @@ class Bullet(object):
 
     def move(self):
         self.x += self.xv
-        self.y += self.yv
+        self.y -= self.yv
 
     def draw(self, win):
         pygame.draw.rect(win, (255, 255, 255), [self.x, self.y, self.w, self.h])
@@ -91,14 +91,22 @@ class Bullet(object):
 def redrawGameWindow():
     win.blit(bg, (0,0))
     player.draw(win)
+    
+    for b in playerBullets:
+        b.draw(win)
+
     pygame.display.update()
 
 
 player = Player()
+playerBullets = []
 run = True
 while run:
     clock.tick(60)
     if not gameover:
+        for b in playerBullets:
+            b.move()
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             player.turnLeft()
@@ -110,6 +118,10 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                if not gameover:
+                    playerBullets.append(Bullet())
     
     redrawGameWindow()
 pygame.quit()
