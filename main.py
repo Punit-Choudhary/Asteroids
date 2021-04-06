@@ -122,6 +122,8 @@ while run:
             if event.key == pygame.K_SPACE:
                 if not gameover:
                     playerBullets.append(Bullet())
+            if event.key == pygame.K_q:
+                run = False
     
     redrawGameWindow()
 pygame.quit()
