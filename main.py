@@ -179,6 +179,29 @@ while run:
             for b in playerBullets:
                 if (b.x >= a.x and b.x <= a.x + a.w) or b.x + b.w >= a.x and b.x + b.w <= a.x + a.w:
                     if (b.y >= a.y and b.y <= a.y + a.h) or b.y + b.h >= a.y and b.y + b.h <= a.y + a.h:
+
+                        if a.rank == 3:
+                            na1 = Asteroid(2)
+                            na2 = Asteroid(2)
+                            na1.x = a.x
+                            na2.x = a.x
+                            na1.y = a.y
+                            na2.y = a.y
+
+                            asteroids.append(na1)
+                            asteroids.append(na2)
+
+                        elif a.rank == 2:
+                            na1 = Asteroid(1)
+                            na2 = Asteroid(1)
+                            na1.x = a.x
+                            na2.x = a.x
+                            na1.y = a.y
+                            na2.y = a.y
+
+                            asteroids.append(na1)
+                            asteroids.append(na2)
+
                         asteroids.pop(asteroids.index(a))
                         playerBullets.pop(playerBullets.index(b))
 
