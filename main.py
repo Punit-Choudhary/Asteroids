@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 s_width = 800
 s_height = 800
@@ -101,6 +102,40 @@ class Bullet(object):
         if self.x < -50 or self.x > s_width or self.y > s_height or self.y < -50:
             return True
 
+class Asteroid(object):
+    def __init__(self, rank):
+        self.rank = rank
+        if self.rank == 1:
+            self.image = asteroid50
+        elif self.rank == 2:
+            self.image = asteroid100
+        else:
+            self.image = asteroid150
+        self.w = 50 * rank
+        self.h = 50 * rank
+        self.ranPoint = random.choice([(random.randrange(0, s_width - self.w),
+                        random.choice([-1 * self.h - 5, s_height + 5])),
+                        (random.choice([-1 * self.w - 5, s_width + 5])),
+                        random.randrange(0, s_height - self.h)])
+
+        self.x, self.y = self.ranPoint
+
+        if self.x < s_width // 2:
+            self.xdir = 1
+        else:
+            self.xdir = -1
+        
+        if self.y < s_height // 2:
+            self.ydir = 1
+        else:
+            self.ydir = -1
+        
+        self.xv = self.xdir * random.randrange(1, 3)
+        self.yv = self.ydir * random.randrange(1, 3)
+    
+
+    def draw(self, win):
+        win.blit(self.image, (self.x, self.y))
 
 def redrawGameWindow():
     win.blit(bg, (0,0))
@@ -114,6 +149,8 @@ def redrawGameWindow():
 
 player = Player()
 playerBullets = []
+asteroids = []
+count = 0
 run = True
 while run:
     clock.tick(60)
