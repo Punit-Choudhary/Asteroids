@@ -115,8 +115,8 @@ class Asteroid(object):
         self.h = 50 * rank
         self.ranPoint = random.choice([(random.randrange(0, s_width - self.w),
                         random.choice([-1 * self.h - 5, s_height + 5])),
-                        (random.choice([-1 * self.w - 5, s_width + 5])),
-                        random.randrange(0, s_height - self.h)])
+                        (random.choice([-1 * self.w - 5, s_width + 5]),
+                        random.randrange(0, s_height - self.h))])
 
         self.x, self.y = self.ranPoint
 
@@ -141,6 +141,9 @@ def redrawGameWindow():
     win.blit(bg, (0,0))
     player.draw(win)
     
+    for a in asteroids:
+        a.draw(win)
+
     for b in playerBullets:
         b.draw(win)
 
@@ -154,13 +157,30 @@ count = 0
 run = True
 while run:
     clock.tick(60)
+    count += 1
     if not gameover:
+        
+        if count % 50 == 0:
+            rn = random.choice([1, 1, 1, 2, 2, 3])
+            asteroids.append(Asteroid(rn))
+
         player.updateLocation()
         for b in playerBullets:
             b.move()
 
             if b.checkOffScreen():
                 playerBullets.pop(playerBullets.index(b))
+            
+        for a in asteroids:
+            a.x += a.xv
+            a.y += a.yv
+
+            # Asteroid bullet collision
+            for b in playerBullets:
+                if (b.x >= a.x and b.x <= a.x + a.w) or b.x + b.w >= a.x and b.x + b.w <= a.x + a.w:
+                    if (b.y >= a.y and b.y <= a.y + a.h) or b.y + b.h >= a.y and b.y + b.h <= a.y + a.h:
+                        asteroids.pop(asteroids.index(a))
+                        playerBullets.pop(playerBullets.index(b))
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
