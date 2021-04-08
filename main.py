@@ -19,6 +19,7 @@ win = pygame.display.set_mode((s_width, s_height))
 clock = pygame.time.Clock()
 
 gameover = False
+lives = 3
 
 class Player(object):
     def __init__(self):
@@ -175,6 +176,12 @@ while run:
             a.x += a.xv
             a.y += a.yv
 
+            if (player.x >= a.x and player.x <= a.x + a.w) or (player.x + player.width >= a.x and player.x + player.width) <= a.x + a.w:
+                if (player.y >= a.y and player.y <= a.y + a.h) or (player.y + player.height >= a.y and player.y + player.height <= a.y + a.h):
+                    lives -= 1
+                    asteroids.pop(asteroids.index(a))
+                    break
+
             # Asteroid bullet collision
             for b in playerBullets:
                 if (b.x >= a.x and b.x <= a.x + a.w) or b.x + b.w >= a.x and b.x + b.w <= a.x + a.w:
@@ -204,7 +211,10 @@ while run:
 
                         asteroids.pop(asteroids.index(a))
                         playerBullets.pop(playerBullets.index(b))
-
+        
+        if lives <= 0:
+            gameover = True
+        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             player.turnLeft()
