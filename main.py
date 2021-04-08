@@ -2,6 +2,8 @@ import pygame
 import math
 import random
 
+pygame.init()
+
 s_width = 800
 s_height = 800
 
@@ -20,6 +22,7 @@ clock = pygame.time.Clock()
 
 gameover = False
 lives = 3
+score = 0
 
 class Player(object):
     def __init__(self):
@@ -141,13 +144,17 @@ class Asteroid(object):
 def redrawGameWindow():
     win.blit(bg, (0,0))
     player.draw(win)
-    
+    font = pygame.font.SysFont('arial', 30)
+    livesText = font.render('Lives: ' + str(lives), 1, (255, 255, 255))
+    playAgainText = font.render('Press Space to Play Again', 1, (255, 255, 255))
     for a in asteroids:
         a.draw(win)
 
     for b in playerBullets:
         b.draw(win)
-
+    if gameover:
+        win.blit(playAgainText, (s_width // 2 - playAgainText.get_width() // 2, s_height // 2 - playAgainText.get_height() // 2))
+    win.blit(livesText, (25, 25))
     pygame.display.update()
 
 
@@ -230,6 +237,10 @@ while run:
             if event.key == pygame.K_SPACE:
                 if not gameover:
                     playerBullets.append(Bullet())
+                else:
+                    gameover = False
+                    lives = 3
+                    asteroids.clear()
             if event.key == pygame.K_q:
                 run = False
     
